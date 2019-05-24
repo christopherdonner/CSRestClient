@@ -32,14 +32,16 @@ let serverPath='/otcs/cs.exe'
   }
 } 
 
+
 $.ajax({
-    url: `${serverURL}${serverPath}/api/v1/nodes`,
+    url: `${serverURL}${serverPath}/api/v1/auth`,
     type: "GET",
-    body: {
-        "type": 0,
-        "parent_id": 2000,
-        "name": "test rest2",
-    }
+    header: {"otcsticket": getCookie()},
+    // body: {
+    //     // "type": 0,
+    //     // "parent_id": 2000,
+    //     // "name": "test rest2",
+    // }
     
 })
 
