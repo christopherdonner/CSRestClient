@@ -34,12 +34,11 @@ let serverPath='/otcs/cs.exe'
 
 $.ajax({
     url: `${serverURL}${serverPath}/api/v1/nodes`,
-    type: "POST",
+    type: "GET",
     body: {
         "type": 0,
         "parent_id": 2000,
         "name": "test rest2",
-        "file": 
     }
     
 })
