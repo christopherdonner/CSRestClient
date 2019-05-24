@@ -4,11 +4,47 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <title>Content Server REST client/application</title>
 </head>
 <body>
     
 </body>
 <script type="text/javascript">
+let serverURL='http://10.5.100.122'
+let serverPath='/otcs/cs.exe'
+
+  function getCookie(){
+  if (!String.prototype.startsWith) {
+      String.prototype.startsWith = function(searchString, position){
+        position = position || 0;
+        return this.substr(position, searchString.length) === searchString;
+    };
+  }
+  var name="llcookie=";
+  var cookies = decodeURIComponent(document.cookie).split(';');
+  for (var i = 0; i < cookies.length; i++) {
+     if (cookies[i].trim().toLowerCase().startsWith(name)) {
+      return cookies[i].trim().substring(name.length);
+     }
+  }
+} 
+
+$.ajax({
+    url: `${serverURL}${serverPath}/api/v1/nodes`,
+    type: "POST",
+    body: {
+        "type": 0,
+        "parent_id": 2000,
+        "name": "test rest2",
+        "file": 
+    }
+    
+})
+
+const otcsticket = getCookie()
+console.log(otcsticket)
 </script>
 </html>
