@@ -1,72 +1,109 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+        integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <title>Content Server REST client/application</title>
 </head>
+
 <body>
-    
+    Lorem ipsum dolor sit amet consectetur adipisicing elit. Nulla sunt quas quidem quo deleniti ullam soluta id,
+    quibusdam quasi commodi labore optio at obcaecati cumque saepe error aut. Saepe, dignissimos?
+    Lorem ipsum dolor sit amet consectetur adipisicing elit. Totam nisi dolorum molestiae, commodi fugit minima, vero
+    hic eos placeat necessitatibus impedit iure sunt dolore assumenda exercitationem doloribus sequi? Corporis,
+    inventore?
+    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam dignissimos ut accusamus soluta distinctio magni
+    officia repudiandae, commodi ipsam. Ad neque ut quo quibusdam odit velit voluptatem eveniet quidem recusandae.
+    Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci modi voluptatem ut saepe excepturi, sed, ad
+    tenetur consequuntur molestias deleniti, reprehenderit explicabo nisi? Temporibus expedita fugit impedit omnis illo
+    dolor.
+    Lorem ipsum dolor sit amet consectetur adipisicing elit. Suscipit ducimus necessitatibus, exercitationem provident
+    sed cupiditate, animi, facere beatae incidunt harum quia deserunt ab totam amet soluta. Neque quisquam distinctio
+    esse?
+
 </body>
 <script type="text/javascript">
-let serverURL='http://10.5.100.122'
-let serverPath='/otcs/cs.exe'
+    let serverURL = 'http://10.5.100.122'
+    let serverPath = '/otcs/cs.exe'
 
-  function getCookie(){
-  if (!String.prototype.startsWith) {
-      String.prototype.startsWith = function(searchString, position){
-        position = position || 0;
-        return this.substr(position, searchString.length) === searchString;
-    };
-  }
-  var name="llcookie=";
-  var cookies = decodeURIComponent(document.cookie).split(';');
-  for (var i = 0; i < cookies.length; i++) {
-     if (cookies[i].trim().toLowerCase().startsWith(name)) {
-      return cookies[i].trim().substring(name.length);
-     }
-  }
-} 
+    function getCookie() {
+        if (!String.prototype.startsWith) {
+            String.prototype.startsWith = function (searchString, position) {
+                position = position || 0;
+                return this.substr(position, searchString.length) === searchString;
+            };
+        }
+        var name = "llcookie=";
+        var cookies = decodeURIComponent(document.cookie).split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            if (cookies[i].trim().toLowerCase().startsWith(name)) {
+                return cookies[i].trim().substring(name.length);
+            }
+        }
+    }
 
-getOTCSTicket = () => {
-    $.ajax({
-        url: `https://cors-escape.herokuapp.com/${serverURL}${serverPath}/api/v1/auth`,
-        type: "POST",
-        contentType: "application/x-www-form-urlencoded",
-        dataType: 'json',
-        body: {
-           "username": "admin",
-           "password": "livelink"
-       }
+    function GetTicket(UserName, Password) {
+        var formData = { username: UserName, password: Password }
+        return $.ajax({
+            //url: 'http://10.5.103.31/OTCS/cs.exe/api/v1/auth'+'?username='+USERNAME+'&password='+PASSWORD,
+            url: `${serverURL}${serverPath}/api/v1/auth`,
+            method: "POST",
+            data: formData,
+            dataType: 'json',
+            contentType: "application/x-www-form-urlencoded",
+            success: function (result) {
+                var content = result.ticket;
+                // $("#ticket").append(content);
+                console.log(content)
+                //alert(JSON.stringify(result));
+            }
+        });
+    }
 
-    })
-}
 
-getNode = () => {
-$.ajax({
-    url: `${serverURL}${serverPath}/api/v1/nodes`,
-    type: "GET",
-    
-    body: {
-        "type": 0,
-        "parent_id": 2000,
-    },
-    headers: {
-        "ticket": llCookie
-    }   
-}).then(function(response){
-    console.log(response)
-})
-}
+    getOTCSTicket = () => {
+        $.ajax({
+            url: `https://cors-escape.herokuapp.com/${serverURL}${serverPath}/api/v1/auth`,
+            type: "POST",
+            contentType: "application/x-www-form-urlencoded",
+            dataType: 'json',
+            body: {
+                "username": "admin",
+                "password": "livelink"
+            }
 
-const llCookie = getCookie()
-const otcsTicket = getOTCSTicket()
-console.log(llCookie)
-console.log(otcsTicket)
-getNode()
+        })
+    }
+
+    getNode = (nodeID) => {
+        $.ajax({
+            url: `${serverURL}${serverPath}/api/v1/nodes`,
+            type: "GET",
+
+            body: {
+                "type": 0,
+                "parent_id": this.nodeID,
+            },
+            headers: {
+                "ticket": llCookie
+            }
+        }).then(function (response) {
+            console.log(response)
+        })
+    }
+
+    const llCookie = getCookie()
+    const otcsTicket = getOTCSTicket()
+    console.log(llCookie)
+    console.log(otcsTicket)
+    getNode()
+    GetTicket("Admin", "livelink")
 
 </script>
+
 </html>
