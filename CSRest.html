@@ -30,6 +30,7 @@
 <script type="text/javascript">
     let serverURL = 'http://10.5.100.122'
     let serverPath = '/otcs/cs.exe'
+    let otcsTicket =''
 
     function getCookie() {
         if (!String.prototype.startsWith) {
@@ -57,9 +58,11 @@
             dataType: 'json',
             contentType: "application/x-www-form-urlencoded",
             success: function (result) {
-                var content = result.ticket;
+                console.log(result.ticket);
                 // $("#ticket").append(content);
-                console.log(content)
+                // console.log(content)
+                otcsTicket=result.ticket
+                console.log(otcsTicket)
                 //alert(JSON.stringify(result));
             }
         });
@@ -82,15 +85,14 @@
 
     getNode = (nodeID) => {
         $.ajax({
-            url: `${serverURL}${serverPath}/api/v1/nodes`,
+            url: `${serverURL}${serverPath}/api/v1/nodes/this.nodeID`,
             type: "GET",
-
+            contentType: "application/x-www-form-urlencoded",
             body: {
-                "type": 0,
-                "parent_id": this.nodeID,
+                "id": this.nodeID,
             },
             headers: {
-                "ticket": llCookie
+                "otcsticket": otcsTicket
             }
         }).then(function (response) {
             console.log(response)
@@ -98,11 +100,11 @@
     }
 
     const llCookie = getCookie()
-    const otcsTicket = getOTCSTicket()
+    // const otcsTicket = getOTCSTicket()
     console.log(llCookie)
-    console.log(otcsTicket)
-    getNode()
     GetTicket("Admin", "livelink")
+    console.log(otcsTicket)
+    getNode(2000)
 
 </script>
 
