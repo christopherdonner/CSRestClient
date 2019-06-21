@@ -12,27 +12,15 @@
 </head>
 
 <body>
-    Lorem ipsum dolor sit amet consectetur adipisicing elit. Nulla sunt quas quidem quo deleniti ullam soluta id,
-    quibusdam quasi commodi labore optio at obcaecati cumque saepe error aut. Saepe, dignissimos?
-    Lorem ipsum dolor sit amet consectetur adipisicing elit. Totam nisi dolorum molestiae, commodi fugit minima, vero
-    hic eos placeat necessitatibus impedit iure sunt dolore assumenda exercitationem doloribus sequi? Corporis,
-    inventore?
-    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam dignissimos ut accusamus soluta distinctio magni
-    officia repudiandae, commodi ipsam. Ad neque ut quo quibusdam odit velit voluptatem eveniet quidem recusandae.
-    Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci modi voluptatem ut saepe excepturi, sed, ad
-    tenetur consequuntur molestias deleniti, reprehenderit explicabo nisi? Temporibus expedita fugit impedit omnis illo
-    dolor.
-    Lorem ipsum dolor sit amet consectetur adipisicing elit. Suscipit ducimus necessitatibus, exercitationem provident
-    sed cupiditate, animi, facere beatae incidunt harum quia deserunt ab totam amet soluta. Neque quisquam distinctio
-    esse?
+<div id="otcsTicket">Ticket:</div>
 
 </body>
 <script type="text/javascript">
     let serverURL = 'http://10.5.100.122'
     let serverPath = '/otcs/cs.exe'
-    let otcsTicket =''
+    var otcsTicket =''
 
-    function getCookie() {
+    getCookie = () => {
         if (!String.prototype.startsWith) {
             String.prototype.startsWith = function (searchString, position) {
                 position = position || 0;
@@ -48,49 +36,37 @@
         }
     }
 
-    function GetTicket(UserName, Password) {
-        var formData = { username: UserName, password: Password }
-        return $.ajax({
-            //url: 'http://10.5.103.31/OTCS/cs.exe/api/v1/auth'+'?username='+USERNAME+'&password='+PASSWORD,
+    getTicket = (UserName, Password) => 
+    {
+        const formData = { username: UserName, password: Password }
+        var ticket
+        // return 
+            $.ajax({
             url: `${serverURL}${serverPath}/api/v1/auth`,
             method: "POST",
             data: formData,
             dataType: 'json',
             contentType: "application/x-www-form-urlencoded",
             success: function (result) {
-                console.log(result.ticket);
-                // $("#ticket").append(content);
-                // console.log(content)
-                otcsTicket=result.ticket
-                console.log(otcsTicket)
+                // otcsTicket=result.ticket
+                $("#otcsTicket").html(result.ticket);
+                // console.log(otcsTicket)
                 //alert(JSON.stringify(result));
+                otcsTicket=result.ticket
+                return result.ticket
+
             }
+            // .then({
+            //     // otcsTicket=ticket
+            // })
         });
-    }
-
-
-    getOTCSTicket = () => {
-        $.ajax({
-            url: `https://cors-escape.herokuapp.com/${serverURL}${serverPath}/api/v1/auth`,
-            type: "POST",
-            contentType: "application/x-www-form-urlencoded",
-            dataType: 'json',
-            body: {
-                "username": "admin",
-                "password": "livelink"
-            }
-
-        })
     }
 
     getNode = (nodeID) => {
         $.ajax({
-            url: `${serverURL}${serverPath}/api/v1/nodes/this.nodeID`,
+            url: `${serverURL}${serverPath}/api/v1/nodes/${nodeID}`,
             type: "GET",
             contentType: "application/x-www-form-urlencoded",
-            body: {
-                "id": this.nodeID,
-            },
             headers: {
                 "otcsticket": otcsTicket
             }
@@ -100,10 +76,15 @@
     }
 
     const llCookie = getCookie()
+    // const otcsTicket=$("#otcsTicket").val()
+    console.log(llCookie)
     // const otcsTicket = getOTCSTicket()
     console.log(llCookie)
-    GetTicket("Admin", "livelink")
+    getTicket("Admin", "livelink")
+    // console.log(getTicket())
+    otcsTicket=$("#otcsTicket").val()
     console.log(otcsTicket)
+    console.log($("#otcsTicket").val())
     getNode(2000)
 
 </script>
