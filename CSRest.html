@@ -23,8 +23,8 @@
     <form>
             <div class="form-group">
               <label for="exampleInputEmail1">User Name</label>
-              <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter username">
-              <small id="emailHelp" class="form-text text-muted">Your Content Server username</small>
+              <input type="username" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter username">
+              <small id="usernameAlt" class="form-text text-muted">Your Content Server username</small>
             </div>
             <div class="form-group">
               <label for="exampleInputPassword1">Password</label>
@@ -34,14 +34,21 @@
               <input type="checkbox" class="form-check-input" id="exampleCheck1">
               <label class="form-check-label" for="exampleCheck1">Reemmebr Me</label>
             </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="button" class="btn btn-primary" id="login">Submit</button>
           </form>
 </div>
 </body>
 <script type="text/javascript">
     let serverURL = 'http://10.5.100.122'
     let serverPath = '/otcs/cs.exe'
-    var otcsTicket =''
+    
+    var user = {
+        name: '',
+        password: '',
+        llcookie: '',
+        otcsTicket: ''
+    }
+    // var otcsTicket
 
     getCookie = () => {
         if (!String.prototype.startsWith) {
@@ -75,15 +82,14 @@
                 $("#otcsTicket").html(result.ticket);
                 // console.log(otcsTicket)
                 //alert(JSON.stringify(result));
-                otcsTicket=result.ticket
+                user.otcsTicket=result.ticket
+                console.log(user.otcsTicket)
+                getNode(2000)
                 return result.ticket
-
             }
-            // .then({
-            //     // otcsTicket=ticket
-            // })
-        });
-    }
+            });
+        
+        }
 
     getNode = (nodeID) => {
         $.ajax({
@@ -91,24 +97,24 @@
             type: "GET",
             contentType: "application/x-www-form-urlencoded",
             headers: {
-                "otcsticket": otcsTicket
+                "otcsticket": user.otcsTicket
             }
         }).then(function (response) {
             console.log(response)
         })
     }
 
+
+
     const llCookie = getCookie()
-    // const otcsTicket=$("#otcsTicket").val()
     console.log(llCookie)
-    // const otcsTicket = getOTCSTicket()
-    console.log(llCookie)
-    getTicket("Admin", "livelink")
-    // console.log(getTicket())
-    otcsTicket=$("#otcsTicket").val()
-    console.log(otcsTicket)
-    console.log($("#otcsTicket").val())
-    getNode(2000)
+    user.otcsTicket=getTicket("Admin", "livelink")
+    console.log(user.otcsTicket)
+
+    $("#login").on("click", function(){
+        getNode(2000)
+    })
+
 
 </script>
 
