@@ -37,6 +37,9 @@
             <button type="button" class="btn btn-primary" id="login">Submit</button>
           </form>
 </div>
+<div class="row">
+    <div class="col-8 offset-2" id="browse"></div>
+</div>
 </body>
 <script type="text/javascript">
     let serverURL = 'http://client-cs16-2.lab.opentext.com'
@@ -47,6 +50,12 @@
         password: '',
         llcookie: '',
         otcsTicket: ''
+    }
+
+    var node = {
+        ID: 0,
+        name: '',
+        children: []
     }
     // var otcsTicket
 
@@ -79,15 +88,20 @@
             contentType: "application/x-www-form-urlencoded",
             success: function (result) {
                 // otcsTicket=result.ticket
-                $("#otcsTicket").html(result.ticket);
+                $("#otcsTicket").append(result.ticket);
                 // console.log(otcsTicket)
                 //alert(JSON.stringify(result));
                 user.otcsTicket=result.ticket
                 console.log(user.otcsTicket)
-                getNode(2000)
+                if(user.otcsTicket){
+                    getNode(2000)
+                    getNodeChildren(2000)
+                }
                 return result.ticket
             }
-            });
+            // }).then(function {
+
+            })
         
         }
 
@@ -100,12 +114,29 @@
                 "otcsticket": user.otcsTicket
             }
         }).then(function (response) {
-            console.log(response)
+            console.log(response.data)
+            $("#browse").html(response.data.name).append(`<img src="${serverURL}${response.data.icon}`)
+            $("#browse").
         })
     }
 
+getNodeChildren = (nodeID) => {
+    $.ajax({
+        url: `${serverURL}${serverPath}/api/v1/nodes/${nodeID}/nodes`,
+            type: "GET",
+            contentType: "application/x-www-form-urlencoded",
+            headers: {
+                "otcsticket": user.otcsTicket
+            }
+    }).then(function(response){
+        console.log(response)
+    })
+}
 
-
+browseTable = () => {
+    var browseTable=$("#browse")
+    var objectNameTD=$("<td>").text(object.name)
+}
     const llCookie = getCookie()
     // console.log(llCookie)
     // user.otcsTicket=getTicket("Admin", "livelink")
