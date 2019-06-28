@@ -118,8 +118,9 @@
             }
         }).then(function (response) {
             console.log(response.data)
-            $("#browse").html(`${response.data.name}`)
-            $("#browse").append(`<img src="${serverURL}${response.data.icon}>`)
+            $("#browseHeader").html(`${response.data.name}`)
+            $("#browseHeader").append(`<img src="${serverURL}${response.data.icon}>`)
+
         })
     }
 
@@ -134,15 +135,18 @@ getNodeChildren = (nodeID) => {
     }).then(function(response){
         console.log(response)
         node.children=response.data
+        browseTable()
     })
 }
 
 browseTable = () => {
     var browseTable=$("#browse")
-    var objectNameTD=$("<td>").text(object.name)
+    var row = $("<tr>")
+    // var objectNameTD=$("<td>").text(object.name)
         for(i=0;i<node.children.length;i++){
-            // node.children.
-        }
+            row.append(`$("<td>").text(${node.children[i].name})`)
+            }
+            browseTable.append(row)
 }
 
     const llCookie = getCookie()
