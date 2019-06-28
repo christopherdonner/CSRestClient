@@ -40,8 +40,44 @@
 <div class="row">
     <div class="col-8 offset-2" id="browseHeader"></div>
 </div>
-<div class="row">
-    <div class="col-8 offset-2" id="browse"></div>
+<div class="card">
+<div class="card-body">
+    <div class="container">
+        <div class="row">
+            <table style="width:100%; margin:10px" id="browse">
+                <tr>
+                    <th>
+                        Name
+                    </th>
+                    <th>
+                        ID
+                    </th>
+                    <!-- <th>
+                        Frequency (min)
+                    </th>
+                    <th>
+                        Next Arrival
+                    </th>
+                    <th>
+                        Minutes Away
+                    </th> -->
+                </tr>
+                <tr>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <!-- <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td> -->
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
 </div>
 </body>
 <script type="text/javascript">
@@ -142,11 +178,16 @@ getNodeChildren = (nodeID) => {
 browseTable = () => {
     var browseTable=$("#browse")
     var row = $("<tr>")
+        var nodeName
+        var nodeID
     // var objectNameTD=$("<td>").text(object.name)
         for(i=0;i<node.children.length;i++){
-            row.append(`$("<td>").text(${node.children[i].name})`)
-            }
+           nodeName = $("<td>").text(node.children[i].name)
+            nodeID=$("<td>").text(node.children[i].id)
+            row.append(nodeName, nodeID)
             browseTable.append(row)
+            browseTable.append("</tr>")
+        }
 }
 
     const llCookie = getCookie()
