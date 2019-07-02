@@ -184,7 +184,11 @@ browseTable = () => {
         for(i=0;i<node.children.length;i++){
            nodeName = $("<td>").text(node.children[i].name)
             nodeID=$("<td>").text(node.children[i].id)
-            browseTable.append(`<tr><td><a href=${serverURL}${serverPath}/api/v1/nodes/${node.children[i].id}>${node.children[i].name}</a></td><td>${node.children[i].id}</td></tr>`)
+            // browseTable.append(`<tr><td><a href=${serverURL}${serverPath}/api/v1/nodes/${node.children[i].id}>${node.children[i].name}</a></td><td>${node.children[i].id}</td></tr>`)
+            browseTable.append(`<button type="button" class="btn btn-info" id=${node.children[i].id}>${node.children[i].name}</button>`)
+            $(`#${node.children[i].id}`).on("click", function(){
+                getNode(this.id)
+            })
             // row.append("</tr>")
             // browseTable.html(row)
         }
