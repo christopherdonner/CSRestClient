@@ -41,7 +41,10 @@
 <div class="row">
     <div class="col-8 offset-2" id="browseHeader"></div>
 </div>
-<div class="card">
+<div class="row">
+    <div class="col-2 offset-8" id="browseImage"></div>
+</div>
+    <div class="card">
 <div class="card-body">
     <div class="container">
         <div class="row">
@@ -82,8 +85,8 @@
 </div>
 </body>
 <script type="text/javascript">
-    let serverURL = 'http://client-cs16-2.lab.opentext.com'
-    let serverPath = '/otcs/cs.exe'
+    const serverURL = 'http://client-cs16-2.lab.opentext.com'
+    const serverPath = '/otcs/cs.exe'
     
     var user = {
         name: '',
@@ -156,7 +159,7 @@
         }).then(function (response) {
             console.log(response.data)
             $("#browseHeader").html(`${response.data.name}`)
-            $("#browseHeader").append(`<br><img src="${serverURL}${response.data.icon}>`)
+            $("#browseHeader").prepend(`<br><img src=${serverURL}${response.data.icon}>`)
 
         })
     }
