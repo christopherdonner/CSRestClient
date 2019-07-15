@@ -40,6 +40,7 @@
 </div>
 <div class="row">
     <div class="col-8 offset-2" id="browseHeader"></div>
+    <div class="col-2 offset-1" id="browseHeaderImg"></div>
 </div>
 <div class="card">
 <div class="card-body">
@@ -82,8 +83,8 @@
 </div>
 </body>
 <script type="text/javascript">
-    let serverURL = 'http://client-cs16-2.lab.opentext.com'
-    let serverPath = '/otcs/cs.exe'
+    const serverURL = 'http://client-cs16-2.lab.opentext.com'
+    const serverPath = '/otcs/cs.exe'
     
     var user = {
         name: '',
@@ -156,10 +157,16 @@
         }).then(function (response) {
             console.log(response.data)
             $("#browseHeader").html(`${response.data.name}`)
-            $("#browseHeader").append(`<br><img src="${serverURL}${response.data.icon}>`)
-
+            $("#browseHeaderImg").append(`<img src="${serverURL}${response.data.icon}>`)
+                if(response.data.container){
+                    getContainer(this.nodeID)
+                }
         })
     }
+
+getContainer=(dataID)=>{
+
+}
 
 getNodeChildren = (nodeID) => {
     $.ajax({
@@ -194,6 +201,7 @@ browseTable = () => {
             // browseTable.html(row)
         }
 }
+
 
     const llCookie = getCookie()
     // console.log(llCookie)
