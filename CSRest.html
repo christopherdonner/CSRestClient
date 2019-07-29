@@ -48,37 +48,8 @@
 <div class="card-body">
     <div class="container">
         <div class="row">
-            <table style="width:100%; margin:10px" id="browse">
-                <tr>
-                    <th>
-                        Name
-                    </th>
-                    <th>
-                        ID
-                    </th>
-                    <!-- <th>
-                        Frequency (min)
-                    </th>
-                    <th>
-                        Next Arrival
-                    </th>
-                    <th>
-                        Minutes Away
-                    </th> -->
-                </tr>
-                <tr>
-                    <td>
-                    </td>
-                    <td>
-                    </td>
-                    <!-- <td>
-                    </td>
-                    <td>
-                    </td>
-                    <td>
-                    </td> -->
-                </tr>
-            </table>
+            <div id="browse">
+            </div>
         </div>
     </div>
 </div>
@@ -98,7 +69,16 @@
     var node = {
         ID: 0,
         name: '',
-        children: []
+        children: [],
+        icon: '',
+        parentID:0
+    }
+
+    var currentNode = {
+        ID: 0,
+        name: '',
+        icon: '',
+        parentID:0
     }
     // var otcsTicket
 
@@ -148,6 +128,20 @@
         
         }
 
+getIcon = (nodeID, imageURL) => {
+    $.ajax({
+            url: `${serverURL}${serverPath}/api/v1/nodes/${nodeID}`,
+            type: "GET",
+            contentType: "application/x-www-form-urlencoded",
+            headers: {
+                "otcsticket": user.otcsTicket
+            }
+        }).then(function (response) {
+
+        })
+    
+}
+
     getNode = (nodeID) => {
         $.ajax({
             url: `${serverURL}${serverPath}/api/v1/nodes/${nodeID}`,
@@ -175,6 +169,7 @@ getNodeChildren = (nodeID) => {
     }).then(function(response){
         console.log(response)
         node.children=response.data
+        console.log(node.children)
         browseTable()
     })
 }
@@ -186,13 +181,32 @@ browseTable = () => {
         var nodeID
     // var objectNameTD=$("<td>").text(object.name)
         for(i=0;i<node.children.length;i++){
-           nodeName = $("<td>").text(node.children[i].name)
-            nodeID=$("<td>").text(node.children[i].id)
-            // browseTable.append(`<tr><td><a href=${serverURL}${serverPath}/api/v1/nodes/${node.children[i].id}>${node.children[i].name}</a></td><td>${node.children[i].id}</td></tr>`)
-            browseTable.append(`<button type="button" class="btn btn-info" id=${node.children[i].id}>${node.children[i].name}</button>`)
-            $(`#${node.children[i].id}`).on("click", function(){
+            nodeName = $("<td>").text(node.children[i].name)
+                nodeID=$("<td>").text(node.children[i].id)
+                    let dataID=node.children[i].id
+                    let name=node.children[i].name
+                    let iconURL=node.children[i].icon
+                    console.log
+                    if(node.children[i].id){
+            $.get({
+                    url: `${serverURL}${serverPath}/api/v1/nodes/${node.children[i].id}`,
+                contentType: "application/x-www-form-urlencoded",
+                headers: {
+                "otcsticket": user.otcsTicket
+            }
+                }).then(function(response){
+                    iconURL=response.data.icon
+            browseTable.append(`<button type="button" class="btn btn-info" id=${dataID}><img src=${serverURL}${iconURL}>${name}</button>`)
+            $(`#${dataID}`).on("click", function(){
                 getNode(this.id)
             })
+                })
+                }
+      
+                
+            
+            // browseTable.append(`<tr><td><a href=${serverURL}${serverPath}/api/v1/nodes/${node.children[i].id}>${node.children[i].name}</a></td><td>${node.children[i].id}</td></tr>`)
+
             // row.append("</tr>")
             // browseTable.html(row)
         }
