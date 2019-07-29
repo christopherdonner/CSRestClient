@@ -40,11 +40,9 @@
 </div>
 <div class="row">
     <div class="col-8 offset-2" id="browseHeader"></div>
+    <div class="col-2 offset-1" id="browseHeaderImg"></div>
 </div>
-<div class="row">
-    <div class="col-2 offset-8" id="browseImage"></div>
-</div>
-    <div class="card">
+<div class="card">
 <div class="card-body">
     <div class="container">
         <div class="row">
@@ -126,7 +124,7 @@
             $.ajax({
             url: `${serverURL}${serverPath}/api/v1/auth`,
             method: "POST",
-            data: formData,
+            data: { username: UserName, password: Password },
             dataType: 'json',
             contentType: "application/x-www-form-urlencoded",
             success: function (result) {
@@ -159,10 +157,16 @@
         }).then(function (response) {
             console.log(response.data)
             $("#browseHeader").html(`${response.data.name}`)
-            $("#browseHeader").prepend(`<br><img src=${serverURL}${response.data.icon}>`)
-
+            $("#browseHeaderImg").append(`<img src="${serverURL}${response.data.icon}>`)
+                if(response.data.container){
+                    getContainer(this.nodeID)
+                }
         })
     }
+
+getContainer=(dataID)=>{
+
+}
 
 getNodeChildren = (nodeID) => {
     $.ajax({
@@ -197,6 +201,7 @@ browseTable = () => {
             // browseTable.html(row)
         }
 }
+
 
     const llCookie = getCookie()
     // console.log(llCookie)
