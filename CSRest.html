@@ -33,17 +33,17 @@ let serverPath='/otcs/cs.exe'
 } 
 
 
-$.ajax({
-    url: `${serverURL}${serverPath}/api/v1/auth`,
-    type: "GET",
-    header: {"otcsticket": getCookie()},
-    // body: {
-    //     // "type": 0,
-    //     // "parent_id": 2000,
-    //     // "name": "test rest2",
-    // }
+// $.ajax({
+//     url: `${serverURL}${serverPath}/api/v1/auth`,
+//     type: "GET",
+//     header: {"otcsticket": getCookie()},
+//     // body: {
+//     //     // "type": 0,
+//     //     // "parent_id": 2000,
+//     //     // "name": "test rest2",
+//     // }
     
-})
+// })
 
 const otcsticket = getCookie()
 console.log(otcsticket)
