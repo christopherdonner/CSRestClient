@@ -172,7 +172,7 @@
         console.log(`getContainer${nodeID}`)
         $("#browse").empty()
         getNodeChildren(nodeID)
-        if(node.ID!==node.parentID){
+        if(node.ID!==node.parentID&&node.parentID!==-1){
             $("#browseControl").html(`<button type="button" class="btn btn-info" id=${node.parentID}>..</button>`)
             $(`#${node.parentID}`).on("click", function () {
                         getNode(this.id)
@@ -208,35 +208,22 @@
                     })
                 })
             }
-
-
-
-            // browseTable.append(`<tr><td><a href=${serverURL}${serverPath}/api/v1/nodes/${node.children[i].id}>${node.children[i].name}</a></td><td>${node.children[i].id}</td></tr>`)
-
-            // row.append("</tr>")
-            // browseTable.html(row)
         }
     }
 
     const llCookie = getCookie()
-    // console.log(llCookie)
-    // user.otcsTicket=getTicket("Admin", "livelink")
-    // console.log(user.otcsTicket)
 
     if (!llCookie) {
         $("#login").on("click", function () {
-            // getNode(2000)
             if ($("#userName").val() && $("#userPassword").val()) {
                 let username = $("#userName").val()
                 let password = $("#userPassword").val()
                 getTicket(username, password)
-                // user.otcsTicket=getTicket(`${$("#username").val()}`,`$("#password").val()`)
             }
         })
     }
     else {
         getNode(2000)
-        // getNodeChildren(2000)
     }
 
 
