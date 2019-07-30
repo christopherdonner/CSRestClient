@@ -13,52 +13,42 @@
 </head>
 
 <body>
-<div id="otcsTicket">Ticket:</div>
-<div class="container">
-    <!-- <div class="row">
-        <div class="col-4 offeset-2">UserName:</div>
-    </div>
-    <div class="row">
-            <div class="col-4 offeset-2">Password:</div>
-    </div> -->
-    <form>
+    <div id="otcsTicket">Ticket:</div>
+    <div class="container">
+        <form>
             <div class="form-group">
-              <label for="exampleInputEmail1">User Name</label>
-              <input type="username" class="form-control" id="userName" aria-describedby="emailHelp" placeholder="Enter username">
-              <small id="usernameAlt" class="form-text text-muted">Your Content Server username</small>
+                <input type="username" class="form-control" id="userName" aria-describedby="emailHelp"
+                    placeholder="Enter username">
+                <small id="usernameAlt" class="form-text text-muted">Your Content Server username</small>
             </div>
             <div class="form-group">
-              <label for="exampleInputPassword1">Password</label>
-              <input type="password" class="form-control" id="userPassword" placeholder="Password">
-            </div>
-            <div class="form-group form-check">
-              <input type="checkbox" class="form-check-input" id="exampleCheck1">
-              <label class="form-check-label" for="exampleCheck1">Reemmebr Me</label>
+                <input type="password" class="form-control" id="userPassword" placeholder="Password">
             </div>
             <button type="button" class="btn btn-primary" id="login">Submit</button>
-          </form>
-</div>
-<div class="row">
-    <div class="col-8 offset-2" id="browseHeader"></div>
-</div>
-<div class="row">
-    <div class="col-2 offset-8" id="browseImage"></div>
-</div>
+        </form>
+    </div>
+    <div class="row">
+        <div class="col-2" id="browseControl"></div>
+        <div class="col-8 offset-2" id="browseHeader"></div>
+    </div>
+    <div class="row">
+        <div class="col-2 offset-8" id="browseImage"></div>
+    </div>
     <div class="card">
-<div class="card-body">
-    <div class="container">
-        <div class="row">
-            <div id="browse">
+        <div class="card-body">
+            <div class="container">
+                <div class="row">
+                    <div id="browse">
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-</div>
-</div>
 </body>
 <script type="text/javascript">
     const serverURL = 'http://client-cs16-2.lab.opentext.com'
     const serverPath = '/otcs/cs.exe'
-    
+
     var user = {
         name: '',
         password: '',
@@ -71,14 +61,14 @@
         name: '',
         children: [],
         icon: '',
-        parentID:0
+        parentID: 0
     }
 
     var currentNode = {
         ID: 0,
         name: '',
         icon: '',
-        parentID:0
+        parentID: 0
     }
     // var otcsTicket
 
@@ -98,12 +88,11 @@
         }
     }
 
-    getTicket = (UserName, Password) => 
-    {
+    getTicket = (UserName, Password) => {
         const formData = { username: UserName, password: Password }
         var ticket
         // return 
-            $.ajax({
+        $.ajax({
             url: `${serverURL}${serverPath}/api/v1/auth`,
             method: "POST",
             data: formData,
@@ -114,33 +103,33 @@
                 $("#otcsTicket").append(result.ticket);
                 // console.log(otcsTicket)
                 //alert(JSON.stringify(result));
-                user.otcsTicket=result.ticket
+                user.otcsTicket = result.ticket
                 console.log(user.otcsTicket)
-                if(user.otcsTicket){
+                if (user.otcsTicket) {
                     getNode(2000)
-                    getNodeChildren(2000)
+                    // getNodeChildren(2000)
                 }
                 return result.ticket
             }
             // }).then(function {
 
-            })
-        
-        }
-
-getIcon = (nodeID, imageURL) => {
-    $.ajax({
-            url: `${serverURL}${serverPath}/api/v1/nodes/${nodeID}`,
-            type: "GET",
-            contentType: "application/x-www-form-urlencoded",
-            headers: {
-                "otcsticket": user.otcsTicket
-            }
-        }).then(function (response) {
-
         })
-    
-}
+
+    }
+
+    // getIcon = (nodeID, imageURL) => {
+    //     $.ajax({
+    //             url: `${serverURL}${serverPath}/api/v1/nodes/${nodeID}`,
+    //             type: "GET",
+    //             contentType: "application/x-www-form-urlencoded",
+    //             headers: {
+    //                 "otcsticket": user.otcsTicket
+    //             }
+    //         }).then(function (response) {
+
+    //         })
+
+    // }
 
     getNode = (nodeID) => {
         $.ajax({
@@ -152,80 +141,103 @@ getIcon = (nodeID, imageURL) => {
             }
         }).then(function (response) {
             console.log(response.data)
+            node.name = response.data.name
+            node.parentID = response.data.parent_id
+            node.ID = response.data.id
             $("#browseHeader").html(`${response.data.name}`)
             $("#browseHeader").prepend(`<br><img src=${serverURL}${response.data.icon}>`)
-
+            if (response.data.container) {
+                getContainer(nodeID)
+            }
         })
     }
 
-getNodeChildren = (nodeID) => {
-    $.ajax({
-        url: `${serverURL}${serverPath}/api/v1/nodes/${nodeID}/nodes`,
+    getNodeChildren = (nodeID) => {
+        $.ajax({
+            url: `${serverURL}${serverPath}/api/v1/nodes/${nodeID}/nodes`,
             type: "GET",
             contentType: "application/x-www-form-urlencoded",
             headers: {
                 "otcsticket": user.otcsTicket
             }
-    }).then(function(response){
-        console.log(response)
-        node.children=response.data
-        console.log(node.children)
-        browseTable()
-    })
-}
+        }).then(function (response) {
+            console.log(response)
+            node.children = response.data
+            console.log(node.children)
+            browseTable()
+        })
+    }
 
-browseTable = () => {
-    var browseTable=$("#browse")
-    var row = $("<tr>")
+    getContainer = (nodeID) => {
+        console.log(`getContainer${nodeID}`)
+        $("#browse").empty()
+        getNodeChildren(nodeID)
+        if(node.ID!==node.parentID){
+            $("#browseControl").html(`<button type="button" class="btn btn-info" id=${node.parentID}>..</button>`)
+            $(`#${node.parentID}`).on("click", function () {
+                        getNode(this.id)
+                    })
+        }
+    }
+
+    browseTable = () => {
+        var browseTable = $("#browse")
+        var row = $("<tr>")
         var nodeName
         var nodeID
-    // var objectNameTD=$("<td>").text(object.name)
-        for(i=0;i<node.children.length;i++){
+        // var objectNameTD=$("<td>").text(object.name)
+        for (i = 0; i < node.children.length; i++) {
             nodeName = $("<td>").text(node.children[i].name)
-                nodeID=$("<td>").text(node.children[i].id)
-                    let dataID=node.children[i].id
-                    let name=node.children[i].name
-                    let iconURL=node.children[i].icon
-                    console.log
-                    if(node.children[i].id){
-            $.get({
+            nodeID = $("<td>").text(node.children[i].id)
+            let dataID = node.children[i].id
+            let name = node.children[i].name
+            let iconURL = node.children[i].icon
+            console.log
+            if (node.children[i].id) {
+                $.get({
                     url: `${serverURL}${serverPath}/api/v1/nodes/${node.children[i].id}`,
-                contentType: "application/x-www-form-urlencoded",
-                headers: {
-                "otcsticket": user.otcsTicket
-            }
-                }).then(function(response){
-                    iconURL=response.data.icon
-            browseTable.append(`<button type="button" class="btn btn-info" id=${dataID}><img src=${serverURL}${iconURL}>${name}</button>`)
-            $(`#${dataID}`).on("click", function(){
-                getNode(this.id)
-            })
+                    contentType: "application/x-www-form-urlencoded",
+                    headers: {
+                        "otcsticket": user.otcsTicket
+                    }
+                }).then(function (response) {
+                    iconURL = response.data.icon
+                    browseTable.append(`<button type="button" class="btn btn-info" id=${dataID}><img src=${serverURL}${iconURL}>${name}</button>`)
+                    $(`#${dataID}`).on("click", function () {
+                        getNode(this.id)
+                    })
                 })
-                }
-      
-                
-            
+            }
+
+
+
             // browseTable.append(`<tr><td><a href=${serverURL}${serverPath}/api/v1/nodes/${node.children[i].id}>${node.children[i].name}</a></td><td>${node.children[i].id}</td></tr>`)
 
             // row.append("</tr>")
             // browseTable.html(row)
         }
-}
+    }
 
     const llCookie = getCookie()
     // console.log(llCookie)
     // user.otcsTicket=getTicket("Admin", "livelink")
     // console.log(user.otcsTicket)
 
-    $("#login").on("click", function(){
-        // getNode(2000)
-        if($("#userName").val()&&$("#userPassword").val()){
-        let username=$("#userName").val()
-        let password=$("#userPassword").val()
-            getTicket(username, password)
-            // user.otcsTicket=getTicket(`${$("#username").val()}`,`$("#password").val()`)
-        }
-    })
+    if (!llCookie) {
+        $("#login").on("click", function () {
+            // getNode(2000)
+            if ($("#userName").val() && $("#userPassword").val()) {
+                let username = $("#userName").val()
+                let password = $("#userPassword").val()
+                getTicket(username, password)
+                // user.otcsTicket=getTicket(`${$("#username").val()}`,`$("#password").val()`)
+            }
+        })
+    }
+    else {
+        getNode(2000)
+        // getNodeChildren(2000)
+    }
 
 
 </script>
