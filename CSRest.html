@@ -135,6 +135,9 @@
             if (response.data.container) {
                 getContainer(nodeID)
             }
+            else if (response.data.type===144){
+                getDocument(nodeID)
+            }
         })
     }
 
@@ -164,7 +167,19 @@
                         getNode(this.id)
                     })
         }
+            else{$("#browseControl").empty()}
     }
+
+getDocument = (nodeID) =>{
+    console.log(`getDocument ${nodeID}`)
+    $.get({
+                    url: `${serverURL}${serverPath}/api/v1/nodes/${nodeID}/content`,
+                    contentType: "application/x-www-form-urlencoded",
+                    headers: {
+                        "otcsticket": user.otcsTicket
+                    }
+                }).then(function (response) {console.log(response)})
+}
 
     browseTable = () => {
         var browseTable = $("#browse")
