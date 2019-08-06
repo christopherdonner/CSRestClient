@@ -175,6 +175,7 @@ getDocument = (nodeID) =>{
     $.get({
                     url: `${serverURL}${serverPath}/api/v1/nodes/${nodeID}/content`,
                     contentType: "application/x-www-form-urlencoded",
+                    Origin: 'http://maximum.blog',
                     headers: {
                         "otcsticket": user.otcsTicket
                     }
