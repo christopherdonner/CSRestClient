@@ -15,7 +15,8 @@
 <body>
     <div id="otcsTicket">Ticket:</div>
     <div class="container">
-        <form>
+        <div class="row">
+        <!-- <form> -->
             <div class="form-group">
                 <input type="username" class="form-control" id="userName" aria-describedby="emailHelp"
                     placeholder="Enter username">
@@ -23,9 +24,11 @@
             </div>
             <div class="form-group">
                 <input type="password" class="form-control" id="userPassword" placeholder="Password">
+                <small id="passwordAlt" class="form-text text-muted">Your Content Server password</small>
             </div>
             <button type="button" class="btn btn-primary" id="login">Submit</button>
-        </form>
+        <!-- </form> -->
+    </div>
     </div>
     <div class="row">
         <div class="col-2" id="browseControl"></div>
@@ -49,6 +52,7 @@
     const serverURL = 'http://client-cs16-2.lab.opentext.com'
     const serverPath = '/otcs/cs.exe'
 
+
     var user = {
         name: '',
         password: '',
@@ -71,6 +75,7 @@
         parentID: 0
     }
     // var otcsTicket
+
 
     getCookie = () => {
         if (!String.prototype.startsWith) {
@@ -105,6 +110,10 @@
                 //alert(JSON.stringify(result));
                 user.otcsTicket = result.ticket
                 console.log(user.otcsTicket)
+                if(user.otcsTicket){
+    $(".form-group").css("visibility","hidden")
+    $("#login").css("visibility", "hidden")
+}
                 if (user.otcsTicket) {
                     getNode(2000)
                     // getNodeChildren(2000)
@@ -174,8 +183,8 @@ getDocument = (nodeID) =>{
     console.log(`getDocument ${nodeID}`)
     $.get({
                     url: `${serverURL}${serverPath}/api/v1/nodes/${nodeID}/content`,
-                    contentType: "application/x-www-form-urlencoded",
-                    Origin: 'http://maximum.blog',
+                    contentType: "application/json",
+                    // Origin: serverURL,
                     headers: {
                         "otcsticket": user.otcsTicket
                     }
