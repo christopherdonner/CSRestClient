@@ -188,7 +188,7 @@ getDocument = (nodeID) =>{
                     headers: {
                         "otcsticket": user.otcsTicket
                     }
-                }).then(function (response) {console.log(response)})
+                }).then(function (response) {$("#browse").html(response)})
 }
 
     browseTable = () => {
