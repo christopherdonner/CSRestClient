@@ -16,8 +16,8 @@
     <div id="otcsTicket">Ticket:</div>
     <div class="container">
         <div class="row">
-        <!-- <form> -->
-            <div class="form-group">
+            <!-- <form> -->
+            <div class="form-group" id="lllogin">
                 <input type="username" class="form-control" id="userName" aria-describedby="emailHelp"
                     placeholder="Enter username">
                 <small id="usernameAlt" class="form-text text-muted">Your Content Server username</small>
@@ -27,8 +27,8 @@
                 <small id="passwordAlt" class="form-text text-muted">Your Content Server password</small>
             </div>
             <button type="button" class="btn btn-primary" id="login">Submit</button>
-        <!-- </form> -->
-    </div>
+            <!-- </form> -->
+        </div>
     </div>
     <div class="row">
         <div class="col-2" id="browseControl"></div>
@@ -46,6 +46,10 @@
                 </div>
             </div>
         </div>
+    </div>
+    <div class="row">
+        <div class="col-2 offset-8" id="pageControls"></div>
+
     </div>
 </body>
 <script type="text/javascript">
@@ -110,10 +114,11 @@
                 //alert(JSON.stringify(result));
                 user.otcsTicket = result.ticket
                 console.log(user.otcsTicket)
-                if(user.otcsTicket){
-    $(".form-group").css("visibility","hidden")
-    $("#login").css("visibility", "hidden")
-}
+                if (user.otcsTicket) {
+                    $(".form-group").css("visibility", "hidden")
+                    $("#login").css("visibility", "hidden")
+                    $("#lllogin").html("Livelink!")
+                }
                 if (user.otcsTicket) {
                     getNode(2000)
                     // getNodeChildren(2000)
@@ -144,7 +149,7 @@
             if (response.data.container) {
                 getContainer(nodeID)
             }
-            else if (response.data.type===144){
+            else if (response.data.type === 144) {
                 getDocument(nodeID)
             }
         })
@@ -152,7 +157,7 @@
 
     getNodeChildren = (nodeID) => {
         $.ajax({
-            url: `${serverURL}${serverPath}/api/v1/nodes/${nodeID}/nodes`,
+            url: `${serverURL}${serverPath}/api/v1/nodes/${nodeID}/nodes`, //get children of nodeID
             type: "GET",
             contentType: "application/x-www-form-urlencoded",
             headers: {
@@ -163,6 +168,15 @@
             node.children = response.data
             console.log(node.children)
             browseTable()
+            $("#pageControls").prepend(`Page:${response.page}/${response.page_total}`)
+            if(response.page<response.page_total&&response.page===1){
+                $("#pageControls").append(`<img src="${serverURL}/img/arrowright.gif">`)
+            }
+            else if(response.page<response.page_total&&response.page>1){
+                $("#pageControls").append(`<img src="${serverURL}/img/arrowleft.gif">`)
+                $("#pageControls").append(`<img src="${serverURL}/img/arrowright.gif">`)
+            }
+                // $("#pageControls").append(`=>`)
         })
     }
 
@@ -170,33 +184,33 @@
         console.log(`getContainer${nodeID}`)
         $("#browse").empty()
         getNodeChildren(nodeID)
-        if(node.ID!==node.parentID&&node.parentID!=-1){
+        if (node.ID !== node.parentID && node.parentID != -1) {
             $("#browseControl").html(`<button type="button" class="btn btn-info" id=${node.parentID}>..</button>`)
             $(`#${node.parentID}`).on("click", function () {
-                        getNode(this.id)
-                    })
+                getNode(this.id)
+            })
         }
-            else{$("#browseControl").empty()}
+        else { $("#browseControl").empty() }
     }
 
-getDocument = (nodeID) =>{
-    console.log(`getDocument ${nodeID}`)
-    $.get({
-                    // url: `${serverURL}${serverPath}/api/v1/nodes/${nodeID}/content`,
-                    url: `${serverURL}${serverPath}/`,
-                    contentType: "application/octetstream",
-                    // Origin: serverURL,
-                    headers: {
-                        "otcsticket": user.otcsTicket
-                    }
-                }).then(function (response) {
-                    $("#browse").html(response)
-                    $("#browseControl").html(`<button type="button" class="btn btn-info" id=${node.parentID}>..</button>`)
-                    $(`#${node.parentID}`).on("click", function () {
-                        getNode(this.id)
-                    })
-                })
-}
+    getDocument = (nodeID) => {
+        console.log(`getDocument ${nodeID}`)
+        $.get({
+            // url: `${serverURL}${serverPath}/api/v1/nodes/${nodeID}/content`,
+            url: `${serverURL}${serverPath}/`,
+            contentType: "application/octetstream",
+            // Origin: serverURL,
+            headers: {
+                "otcsticket": user.otcsTicket
+            }
+        }).then(function (response) {
+            $("#browse").html(response)
+            $("#browseControl").html(`<button type="button" class="btn btn-info" id=${node.parentID}>..</button>`)
+            $(`#${node.parentID}`).on("click", function () {
+                getNode(this.id)
+            })
+        })
+    }
 
     browseTable = () => {
         var browseTable = $("#browse")
