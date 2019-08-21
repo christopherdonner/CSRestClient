@@ -169,12 +169,15 @@
             browseTable()
             $("#pageControls").html(`Page:${response.page}/${response.page_total}`)
             if(response.page<response.page_total&&response.page===1){
-                $("#pageControls").append(`<img src="${serverURL}/img/arrowright.gif">`)
+                $("#pageControls").append(`<div id="rightArrow"><img src="${serverURL}/img/arrowright.gif"></div>`)
+                $("#rightArrow").on("click", function(){console.log("rightArrowClick");node.page+=1;getContainer(nodeID)})
             }
             else if(response.page<response.page_total&&response.page>1){
-                $("#pageControls").append(`<img src="${serverURL}/img/arrowleft.gif">`)
-                $("#pageControls").append(`<img src="${serverURL}/img/arrowright.gif">`)
-            }
+                $("#pageControls").append(`<div id="leftarrow"><img src="${serverURL}/img/arrowleft.gif"></div>`)
+                $("#leftarrow").on("click", function(){console.log("leftArrow");node.page-=1;getContainer(nodeID)})
+                $("#pageControls").append(`<div id="rightArrow"><img src="${serverURL}/img/arrowright.gif"></div>`)
+                $("#rightArrow").on("click", function(){console.log("rightArrowClick");node.page+=1;getContainer(nodeID)})
+                }
         })
     }
 
