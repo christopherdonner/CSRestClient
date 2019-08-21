@@ -13,7 +13,7 @@
 </head>
 
 <body>
-    <div id="otcsTicket">Ticket:</div>
+    <div id="logo"></div>
     <div class="container">
         <div class="row">
             <!-- <form> -->
@@ -69,7 +69,10 @@
         name: '',
         children: [],
         icon: '',
-        parentID: 0
+        parentID: 0,
+        page: 1,
+        size: 0,
+        type: ''
     }
 
     var currentNode = {
@@ -108,10 +111,7 @@
             dataType: 'json',
             contentType: "application/x-www-form-urlencoded",
             success: function (result) {
-                // otcsTicket=result.ticket
                 $("#otcsTicket").append(result.ticket);
-                // console.log(otcsTicket)
-                //alert(JSON.stringify(result));
                 user.otcsTicket = result.ticket
                 console.log(user.otcsTicket)
                 if (user.otcsTicket) {
@@ -121,11 +121,9 @@
                 }
                 if (user.otcsTicket) {
                     getNode(2000)
-                    // getNodeChildren(2000)
                 }
                 return result.ticket
             }
-            // }).then(function {
 
         })
 
@@ -159,6 +157,7 @@
         $.ajax({
             url: `${serverURL}${serverPath}/api/v1/nodes/${nodeID}/nodes`, //get children of nodeID
             type: "GET",
+            data: {page: node.page},
             contentType: "application/x-www-form-urlencoded",
             headers: {
                 "otcsticket": user.otcsTicket
@@ -168,7 +167,7 @@
             node.children = response.data
             console.log(node.children)
             browseTable()
-            $("#pageControls").prepend(`Page:${response.page}/${response.page_total}`)
+            $("#pageControls").html(`Page:${response.page}/${response.page_total}`)
             if(response.page<response.page_total&&response.page===1){
                 $("#pageControls").append(`<img src="${serverURL}/img/arrowright.gif">`)
             }
@@ -176,7 +175,6 @@
                 $("#pageControls").append(`<img src="${serverURL}/img/arrowleft.gif">`)
                 $("#pageControls").append(`<img src="${serverURL}/img/arrowright.gif">`)
             }
-                // $("#pageControls").append(`=>`)
         })
     }
 
@@ -238,6 +236,7 @@
                     $(`#${dataID}`).on("click", function () {
                         getNode(this.id)
                     })
+                    browseTable.append(``)
                 })
             }
 
@@ -254,6 +253,8 @@
     // console.log(llCookie)
     // user.otcsTicket=getTicket("Admin", "livelink")
     // console.log(user.otcsTicket)
+
+$("#logo").html(`<img src="${serverURL}/img/login_splash1.gif">`)
 
     if (!llCookie) {
         $("#login").on("click", function () {
