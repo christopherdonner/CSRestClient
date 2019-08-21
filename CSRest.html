@@ -197,14 +197,15 @@
     getDocument = (nodeID) => {
         console.log(`getDocument ${nodeID}`)
         $.get({
-            // url: `${serverURL}${serverPath}/api/v1/nodes/${nodeID}/content`,
-            url: `${serverURL}${serverPath}/`,
+            url: `${serverURL}${serverPath}/api/v1/nodes/${nodeID}/content`,
+            // url: `${serverURL}${serverPath}/`,
             contentType: "application/octetstream",
             // Origin: serverURL,
             headers: {
                 "otcsticket": user.otcsTicket
             }
         }).then(function (response) {
+            console.log(response)
             $("#browse").html(response)
             $("#browseControl").html(`<button type="button" class="btn btn-info" id=${node.parentID}>..</button>`)
             $(`#${node.parentID}`).on("click", function () {
