@@ -229,13 +229,14 @@ getNodeActions = (nodeID) => {
         var row = $("<tr>")
         var nodeName
         var nodeID
+        $("#browse").html(`<tr><th>Name</th><th>Size</th><th>Modified</th><th>Creation Date</th></tr>`)
         // var objectNameTD=$("<td>").text(object.name)
         for (i = 0; i < node.children.length; i++) {
             nodeName = $("<td>").text(node.children[i].name)
             nodeID = $("<td>").text(node.children[i].id)
             let dataID = node.children[i].id
             let name = node.children[i].name
-            let iconURL = node.children[i].icon
+            // let iconURL = node.children[i].icon
             console.log
             if (node.children[i].id) {
                 $.get({
@@ -246,7 +247,8 @@ getNodeActions = (nodeID) => {
                     }
                 }).then(function (response) {
                     iconURL = response.data.icon
-                    browseTable.append(`<button type="button" class="btn btn-info" id=${dataID}><img src=${serverURL}${iconURL}>${name}</button>`)
+                    node.created=response.data.create_date
+                    browseTable.append(`<tr><td><button type="button" class="btn btn-info" id=${dataID}><img src=${serverURL}${iconURL}>${name}</button></td><td>${node.created}</td></tr>`)
                     $(`#${dataID}`).on("click", function () {
                         getNode(this.id)
                     })
