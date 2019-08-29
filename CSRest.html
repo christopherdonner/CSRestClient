@@ -30,22 +30,25 @@
             <!-- </form> -->
         </div>
     </div>
+    <!-- <div class="container">
     <div class="row">
-        <div class="col-2" id="browseControl"></div>
+        <div class="col-2 offset-1" id="browseControl"></div>
         <div class="col-8 offset-2" id="browseHeader"></div>
     </div>
     <div class="row">
-        <div class="col-2 offset-8" id="browseImage"></div>
-    </div>
-    <div class="card">
-        <div class="card-body">
+        <div class="col-2 offset-8" id="browseImage"></div> -->
+    <!-- </div> -->
+    <!-- <div class="card"> -->
+        <!-- <div class="card-body"> -->
             <div class="container">
                 <div class="row">
-                    <div id="browse">
-                    </div>
-                </div>
+                    <div class="col-3" id="details"></div>
+                        <div class="col-8 offset-4" id="browse">
             </div>
-        </div>
+                </div>
+            <!-- </div> -->
+        <!-- </div> -->
+    </div>
     </div>
     <div class="row">
         <div class="col-2 offset-8" id="pageControls"></div>
@@ -72,9 +75,17 @@
         parentID: 0,
         page: 1,
         size: 0,
-        type: '',
-        actions: []
+        type: ''
     }
+
+    var currentNode = {
+        ID: 0,
+        name: '',
+        icon: '',
+        parentID: 0
+    }
+    // var otcsTicket
+
 
     getCookie = () => {
         if (!String.prototype.startsWith) {
@@ -134,8 +145,8 @@
             node.name = response.data.name
             node.parentID = response.data.parent_id
             node.ID = response.data.id
-            $("#browseHeader").html(`${response.data.name}`)
-            $("#browseHeader").prepend(`<br><img src=${serverURL}${response.data.icon}>`)
+            $("#details").html(`${response.data.name}`)
+            $("#details").prepend(`<br><img src=${serverURL}${response.data.icon}>`)
             if (response.data.container) {
                 getContainer(nodeID)
             }
@@ -161,13 +172,13 @@
             browseTable()
             $("#pageControls").html(`Page:${response.page}/${response.page_total}`)
             if(response.page<response.page_total&&response.page===1){
-                $("#pageControls").append(`<img src="${serverURL}/img/arrowright.gif" id="rightArrow">`)
+                $("#pageControls").append(`<div id="rightArrow"><img src="${serverURL}/img/arrowright.gif"></div>`)
                 $("#rightArrow").on("click", function(){console.log("rightArrowClick");node.page+=1;getContainer(nodeID)})
             }
             else if(response.page<response.page_total&&response.page>1){
-                $("#pageControls").append(`<img src="${serverURL}/img/arrowleft.gif" id="leftarrow">`)
+                $("#pageControls").append(`<div id="leftarrow"><img src="${serverURL}/img/arrowleft.gif"></div>`)
                 $("#leftarrow").on("click", function(){console.log("leftArrow");node.page-=1;getContainer(nodeID)})
-                $("#pageControls").append(`<img src="${serverURL}/img/arrowright.gif" id="rightArrow">`)
+                $("#pageControls").append(`<div id="rightArrow"><img src="${serverURL}/img/arrowright.gif"></div>`)
                 $("#rightArrow").on("click", function(){console.log("rightArrowClick");node.page+=1;getContainer(nodeID)})
                 }
         })
@@ -186,41 +197,22 @@
         else { $("#browseControl").empty() }
     }
 
-getNodeActions = (nodeID) => {
-    console.log(`getNodeActions ${nodeID}`)
-    $.get({
-        url: `${serverURL}${serverPath}/api/v1/nodes/${nodeID}/actions`,
-        contentType: 'application/json',
-        headers: {
-                "otcsticket": user.otcsTicket
-            }
-    }).then(function(response){
-        console.log(response)
-        node.actions=response.data
-        console.log(node.actions)
-    })
-
-}
-
     getDocument = (nodeID) => {
         console.log(`getDocument ${nodeID}`)
         $.get({
-            url: `${serverURL}${serverPath}/api/v1/nodes/${nodeID}/content?action=download`,
+            url: `${serverURL}${serverPath}/api/v2/nodes/${nodeID}`,
             // url: `${serverURL}${serverPath}/`,
-            contentType: "application/json",
+            contentType: "application/octetstream",
             // Origin: serverURL,
             headers: {
                 "otcsticket": user.otcsTicket
             }
         }).then(function (response) {
-            console.log(`${serverURL}${serverPath}/api/v1/nodes/${nodeID}/content?action=download`)
-            // $("#browse").html(response)
-            $("pageControls").html('')
+            console.log(response)
+            $("#details").append(`<br><br>Size: ${response.results.data.properties.size_formatted}`)
+            $("#details").append(`<br><br>Created: ${response.results.data.properties.create_date}`)
             $("#browseControl").html(`<button type="button" class="btn btn-info" id=${node.parentID}>..</button>`)
-            getNodeActions(nodeID)
-            $(`#${node.parentID}`).on("click", function () {
-                getNode(this.id)
-            })
+            $(`#${node.parentID}`).on("click", function () {getNode(this.id)})
         })
     }
 
@@ -229,14 +221,13 @@ getNodeActions = (nodeID) => {
         var row = $("<tr>")
         var nodeName
         var nodeID
-        $("#browse").html(`<tr><th>Name</th><th>Size</th><th>Modified</th><th>Creation Date</th></tr>`)
         // var objectNameTD=$("<td>").text(object.name)
         for (i = 0; i < node.children.length; i++) {
             nodeName = $("<td>").text(node.children[i].name)
             nodeID = $("<td>").text(node.children[i].id)
             let dataID = node.children[i].id
             let name = node.children[i].name
-            // let iconURL = node.children[i].icon
+            let iconURL = node.children[i].icon
             console.log
             if (node.children[i].id) {
                 $.get({
@@ -247,8 +238,7 @@ getNodeActions = (nodeID) => {
                     }
                 }).then(function (response) {
                     iconURL = response.data.icon
-                    node.created=response.data.create_date
-                    browseTable.append(`<tr><td><button type="button" class="btn btn-info" id=${dataID}><img src=${serverURL}${iconURL}>${name}</button></td><td>${node.created}</td></tr>`)
+                    browseTable.append(`<button type="button" class="btn btn-info" id=${dataID}><img src=${serverURL}${iconURL}>${name}</button>`)
                     $(`#${dataID}`).on("click", function () {
                         getNode(this.id)
                     })
