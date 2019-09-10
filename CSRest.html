@@ -9,14 +9,13 @@
         integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <link rel="stylesheet" href="./style.css">
-    <title>live version - Content Server REST client/application</title>
+    <title>Content Server REST client/application</title>
 </head>
 
 <body>
     <div id="logo"></div>
     <div class="container">
         <div class="row">
-            <!-- <form> -->
             <div class="form-group" id="lllogin">
                 <input type="username" class="form-control" id="userName" aria-describedby="emailHelp"
                     placeholder="Enter username">
@@ -27,26 +26,11 @@
                 <small id="passwordAlt" class="form-text text-muted">Your Content Server password</small>
             </div>
             <button type="button" class="btn btn-primary" id="login">Submit</button>
-            <!-- </form> -->
         </div>
-    <!-- </div> -->
-    <!-- <div class="container">
-    <div class="row">
-        <div class="col-2 offset-1" id="browseControl"></div>
-        <div class="col-8 offset-2" id="browseHeader"></div>
-    </div>
-    <div class="row">
-        <div class="col-2 offset-8" id="browseImage"></div> -->
-    <!-- </div> -->
-    <!-- <div class="card"> -->
-        <!-- <div class="card-body"> -->
-            <!-- <div class="container"> -->
                 <div class="row">
                     <div class="col-3" id="details"></div>
                         <div class="col-8 offset-1" id="browse"></div>
                 </div>
-            <!-- </div> -->
-        <!-- </div> -->
     </div>
     </div>
     <div class="row">
@@ -83,8 +67,6 @@
         icon: '',
         parentID: 0
     }
-    // var otcsTicket
-
 
     getCookie = () => {
         if (!String.prototype.startsWith) {
@@ -105,7 +87,6 @@
     getTicket = (UserName, Password) => {
         const formData = { username: UserName, password: Password }
         var ticket
-        // return 
         $.ajax({
             url: `${serverURL}${serverPath}/api/v1/auth`,
             method: "POST",
@@ -255,26 +236,20 @@
     }
 
     const llCookie = getCookie()
-    // console.log(llCookie)
-    // user.otcsTicket=getTicket("Admin", "livelink")
-    // console.log(user.otcsTicket)
 
 $("#logo").html(`<img src="${serverURL}/img/login_splash1.gif">`)
 
     if (!llCookie) {
         $("#login").on("click", function () {
-            // getNode(2000)
             if ($("#userName").val() && $("#userPassword").val()) {
                 let username = $("#userName").val()
                 let password = $("#userPassword").val()
                 getTicket(username, password)
-                // user.otcsTicket=getTicket(`${$("#username").val()}`,`$("#password").val()`)
             }
         })
     }
     else {
         getNode(2000)
-        // getNodeChildren(2000)
     }
 
 
