@@ -8,14 +8,14 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
         integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <link rel="stylesheet" href="./style.css">
+    <!-- <link rel="stylesheet" href="./style.css"> -->
     <title>Content Server REST client/application</title>
 </head>
 
 <body>
     <div id="logo"></div>
     <div class="container">
-        <div class="row">
+        <!-- <div class="row">
             <div class="form-group" id="lllogin">
                 <input type="username" class="form-control" id="userName" aria-describedby="emailHelp"
                     placeholder="Enter username">
@@ -26,7 +26,7 @@
                 <small id="passwordAlt" class="form-text text-muted">Your Content Server password</small>
             </div>
             <button type="button" class="btn btn-primary" id="login">Submit</button>
-        </div>
+        </div> -->
                 <div class="row">
                     <div class="col-3" id="details"></div>
                         <div class="col-8 offset-1" id="browse"></div>
@@ -39,8 +39,8 @@
     </div>
 </body>
 <script type="text/javascript">
-    const serverURL = 'http://client-cs16-2.lab.opentext.com'
-    const serverPath = '/otcs/cs.exe'
+    const serverURL = '10.5.85.205'
+    const serverPath = '/main/cs.exe'
 
 
     var user = {
@@ -201,7 +201,6 @@
         var row = $("<tr>")
         var nodeName
         var nodeID
-        // var objectNameTD=$("<td>").text(object.name)
         for (i = 0; i < node.children.length; i++) {
             nodeName = $("<td>").text(node.children[i].name)
             nodeID = $("<td>").text(node.children[i].id)
@@ -225,13 +224,6 @@
                     browseTable.append(``)
                 })
             }
-
-
-
-            // browseTable.append(`<tr><td><a href=${serverURL}${serverPath}/api/v1/nodes/${node.children[i].id}>${node.children[i].name}</a></td><td>${node.children[i].id}</td></tr>`)
-
-            // row.append("</tr>")
-            // browseTable.html(row)
         }
     }
 
@@ -248,7 +240,7 @@ $("#logo").html(`<img src="${serverURL}/img/login_splash1.gif">`)
             }
         })
     }
-    else {
+    else if(llCookie){
         getNode(2000)
     }
 
